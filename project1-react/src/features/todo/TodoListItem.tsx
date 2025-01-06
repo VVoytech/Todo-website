@@ -5,6 +5,7 @@ import {deleteTodo} from "./api/delete-todo.ts";
 import {IconTrash} from "@tabler/icons-react";
 import {editTodo} from "./api/edit-todo.ts";
 import {TodoFormValues} from "../../types/TodoFormValues.ts";
+import {deleteTodoNotification} from "./api/notifications.ts";
 
 interface TodoListItemProps {
     item: TodoType;
@@ -24,7 +25,7 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
         try {
             await deleteTodo(item.id);
             onTodoDeleted(item.id);
-            alert("Todo zostało usunięte!");
+            deleteTodoNotification();
         } catch (error) {
             console.error("Błąd podczas usuwania todo:", error);
             alert("Nie udało się usunąć todo.");
