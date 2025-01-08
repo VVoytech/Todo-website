@@ -10,7 +10,6 @@ export const login = async (username: string, password: string) => {
         credentials: 'include',
     });
 
-    console.log(response);
     if(response.status !== 200) {
         throw new Error('Login failed.');
     }

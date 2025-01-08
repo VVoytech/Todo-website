@@ -6,6 +6,9 @@ import {IconTrash} from "@tabler/icons-react";
 import {editTodo} from "./api/edit-todo.ts";
 import {TodoFormValues} from "../../types/TodoFormValues.ts";
 import {deleteTodoNotification} from "./api/notifications.ts";
+import {useNavigate} from "react-router-dom";
+import todoImage from '../../assets/logo.png';
+
 
 interface TodoListItemProps {
     item: TodoType;
@@ -15,6 +18,7 @@ interface TodoListItemProps {
 
 export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, onToggleDone}) => {
     const [isDone, setIsDone] = useState(item.done);
+    const navigate = useNavigate();
 
     const style: CSSProperties = {
         border: "1px solid",
@@ -48,6 +52,10 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
         }
     };
 
+    const handleEdit = () => {
+        navigate(`/todo/edit/${item.id}`);
+    };
+
     return (
         <Card
             shadow="sm"
@@ -55,7 +63,7 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
         >
             <Card.Section>
                 <Image
-                    src="https://placehold.co/400x200"
+                    src={todoImage}
                     h={200}
                     alt="No way"
                 />
@@ -77,6 +85,8 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
                 >
                     <IconTrash size={14}/>
                 </Button>
+
+                <Button onClick={handleEdit} size="xs">Edit</Button>
 
                 <Checkbox
                     checked={isDone}

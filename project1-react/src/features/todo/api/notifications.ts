@@ -3,8 +3,16 @@ import {showNotification} from "@mantine/notifications";
 export const addTodoNotification = () => {
     showNotification({
         color: "green",
-        title: "Dodano todo",
+        title: "Sukces",
         message: "Dodanie powiodło się!",
+    })
+}
+
+export const editTodoNotification = () => {
+    showNotification({
+        color: "green",
+        title: "Sukces",
+        message: "Edytowanie powiodło się!",
     })
 }
 

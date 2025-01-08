@@ -1,9 +1,10 @@
 import {FC} from "react";
 import {useForm} from "@mantine/form";
-import {Button, Stack, TextInput} from "@mantine/core";
+import {Anchor, Button, Center, Group, Paper, Stack, TextInput, Title} from "@mantine/core";
 import {loginErrorNotification} from "./notifications.ts";
 import {login} from "./api/login.ts";
 import {useNavigate} from "react-router-dom";
+import {Notifications} from "@mantine/notifications";
 
 type LoginFromType = {
     email: string;
@@ -29,14 +30,55 @@ export const LoginPage: FC = () => {
     }
 
     return (
-        <div style={{width: '100%'}}>
-            <form onSubmit={form.onSubmit(values => handleSubmit(values))}>
-                <Stack gap="md">
-                    <TextInput required type="email" label="Email" {...form.getInputProps('email')}/>
-                    <TextInput required type="password" label="Password" {...form.getInputProps('password')}/>
-                    <Button type="submit">Login</Button>
-                </Stack>
-            </form>
-        </div>
+        <Center style={{ height: '100vh', backgroundColor: '#f7f9fc' }}>
+            <Paper
+                shadow="md"
+                radius="md"
+                p="xl"
+                style={{ width: 400, maxWidth: '90%', backgroundColor: '#ffffff' }}
+            >
+                <Title order={2} mb="lg">
+                    Witaj z powrotem
+                </Title>
+                <form onSubmit={form.onSubmit(values => handleSubmit(values))}>
+                    <Stack gap="md">
+                        <TextInput
+                            required
+                            type="email"
+                            label="Email"
+                            placeholder="Your email"
+                            {...form.getInputProps('email')}
+                        />
+                        <TextInput
+                            required
+                            type="password"
+                            label="Hasło"
+                            placeholder="Your password"
+                            {...form.getInputProps('password')}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            style={{ backgroundColor: '#1a73e8', color: 'white' }}
+                        >
+                            Zaloguj
+                        </Button>
+                    </Stack>
+                </form>
+
+                <Group justify="space-between" mt="md">
+                    <Anchor
+                        component="button"
+                        type="button"
+                        onClick={() => navigate("/register")}
+                        style={{ fontSize: 14 }}
+                    >
+                        Don't have an account? Sign up
+                    </Anchor>
+                </Group>
+
+                <Notifications style={{ position: 'fixed', top: 60, right: 0 }} />
+            </Paper>
+        </Center>
     );
 }
