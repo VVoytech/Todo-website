@@ -8,6 +8,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {oneTodo} from "./api/get-todo.ts";
 import {useEffect} from "react";
 import {addTodoNotification, editTodoNotification} from "./api/notifications.ts";
+import DateTime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 export const TodoForm = () => {
     const form = useTodoForm();
@@ -24,6 +26,7 @@ export const TodoForm = () => {
                         title: respose.title,
                         content: respose.content,
                         done: respose.done,
+                        deadline: respose.deadline
                     });
                 } catch (error) {
                     console.log(error);
@@ -40,6 +43,7 @@ export const TodoForm = () => {
                     title: vals.title,
                     content: vals.content,
                     done: vals.done,
+                    deadline: vals.deadline,
                 };
                 await editTodo(updatedTodo, Number(id));
                 navigate('/todo');
@@ -80,9 +84,24 @@ export const TodoForm = () => {
                         {...form.getInputProps('content')}
                     />
 
+                    <div>
+                        <label>Deadline</label>
+                        <DateTime
+                            inputProps={{
+                                placeholder: "Wybierz datę i godzinę",
+                                ...form.getInputProps("deadline"),
+                            }}
+                            dateFormat="YYYY-MM-DD"
+                            timeFormat="HH:mm"
+                            onChange={(value) => {
+                                form.setFieldValue("deadline", value.toString());
+                            }}
+                        />
+                    </div>
+
                     <Checkbox
                         label="Wykonane"
-                        {...form.getInputProps('done', { type: 'checkbox' })}
+                        {...form.getInputProps('done', {type: 'checkbox'})}
                     />
 
                     <Group justify="flex-end" mt="md">

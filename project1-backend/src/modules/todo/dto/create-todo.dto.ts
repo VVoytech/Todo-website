@@ -1,4 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateTodoDto {
   @IsString()
@@ -11,4 +12,9 @@ export class CreateTodoDto {
 
   @IsBoolean()
   done: boolean;
+
+  @IsDate()
+  @IsNotEmpty()
+  @Type(() => Date)
+  deadline: Date;
 }

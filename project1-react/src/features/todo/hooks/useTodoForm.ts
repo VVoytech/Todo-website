@@ -7,6 +7,7 @@ export const useTodoForm = () => {
             content: "",
             title: "",
             done: false,
+            deadline: new Date(Date.now())
         },
 
         validate: {

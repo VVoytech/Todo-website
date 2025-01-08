@@ -23,7 +23,7 @@ export const LoginPage: FC = () => {
     const handleSubmit = async (data: LoginFromType) => {
         try {
             await login(data.email, data.password);
-            navigate('/todo');
+            navigate('/main');
         } catch (error) {
             loginErrorNotification();
         }

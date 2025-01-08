@@ -1,6 +1,6 @@
-import {Button, Card, Checkbox, Image, Text} from "@mantine/core";
+import {Button, Card, Checkbox, Image, Spoiler, Text} from "@mantine/core";
 import {TodoType} from "../../types/TodoType.ts";
-import {CSSProperties, FC, memo, useState} from "react";
+import {CSSProperties, FC, memo, useEffect, useState} from "react";
 import {deleteTodo} from "./api/delete-todo.ts";
 import {IconTrash} from "@tabler/icons-react";
 import {editTodo} from "./api/edit-todo.ts";
@@ -18,12 +18,37 @@ interface TodoListItemProps {
 
 export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, onToggleDone}) => {
     const [isDone, setIsDone] = useState(item.done);
+    const [timeLeft, setTimeLeft] = useState<string>('');
     const navigate = useNavigate();
 
     const style: CSSProperties = {
         border: "1px solid",
         borderColor: isDone ? "rgba(194,0,0,0.72)" : "rgba(0,194,0,0.72)"
     };
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            const now = new Date();
+            const deadline = new Date(item.deadline);
+            const difference = deadline.getTime() - now.getTime();
+
+            if (difference <= 0) {
+                setTimeLeft("Deadline minął");
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / (1000 * 60)) % 60);
+
+            setTimeLeft(`${days} dni, ${hours} godzin, ${minutes} minut`);
+        };
+
+        calculateTimeLeft();
+        const timer = setInterval(calculateTimeLeft, 60000);
+
+        return () => clearInterval(timer);
+    }, [item.deadline]);
 
     const handleDelete = async () => {
         try {
@@ -43,6 +68,7 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
                 title: item.title,
                 content: item.content,
                 done: checked,
+                deadline: item.deadline,
             };
             await editTodo(updatedTodo, item.id);
             onToggleDone(item.id, checked);
@@ -73,8 +99,14 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
                 {item.title}
             </Text>
 
+            <Spoiler maxHeight={120} showLabel="Show more" hideLabel="Hide">
+                <Text mt="xs" size="sm" c="dimmed">
+                    {item.content}
+                </Text>
+            </Spoiler>
+
             <Text mt="xs" size="sm" c="dimmed">
-                {item.content}
+                <strong>Czas do deadline:</strong> {timeLeft}
             </Text>
 
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px"}}>

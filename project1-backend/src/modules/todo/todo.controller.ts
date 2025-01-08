@@ -30,6 +30,19 @@ export class TodoController {
     return this.todoService.listTodo(filter, userid);
   }
 
+  @Get('/time')
+  @UseGuards(TokenGuard)
+  deadlineTodo(@Query() filter: TodoFilterDto, @UserId() userid: number) {
+    return this.todoService.deadlineTodo(filter, userid);
+  }
+
+  @Get('/completion-rate')
+  @UseGuards(TokenGuard)
+  async getCompletionRate(@UserId() userid: number) {
+    const completionRate = await this.todoService.getCompletionRate(userid);
+    return { completionRate };
+  }
+
   @Get(':id')
   @UseGuards(TokenGuard)
   async getTodo(@Param('id', ParseIntPipe) id: number) {

@@ -3,4 +3,5 @@ export type TodoFormValues = {
     title: string;
     content: string;
     done: boolean;
+    deadline: Date;
 }

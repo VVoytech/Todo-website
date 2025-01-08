@@ -3,4 +3,5 @@ export type TodoType = {
     title: string;
     content: string;
     done: boolean;
+    deadline: Date;
 }

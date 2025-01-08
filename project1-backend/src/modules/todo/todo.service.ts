@@ -20,6 +20,43 @@ export class TodoService {
     });
   }
 
+  async deadlineTodo(filter: TodoFilterDto, userid: number) {
+    const now = new Date();
+    const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+    return this.prisma.todo.findMany({
+      where: {
+        userId: userid,
+        done: false,
+        deadline: { lte: oneDayLater },
+      },
+      orderBy: {
+        [filter.sortBy]: filter.sortOrder,
+      },
+    });
+  }
+
+  async getCompletionRate(userid: number): Promise<number> {
+    // Pobierz liczbę wszystkich zadań danego użytkownika
+    const totalTodos = await this.prisma.todo.count({
+      where: { userId: userid },
+    });
+
+    if (totalTodos === 0) return 0; // Unikamy dzielenia przez 0
+
+    // Pobierz liczbę ukończonych zadań danego użytkownika
+    const completedTodos = await this.prisma.todo.count({
+      where: {
+        userId: userid,
+        done: true,
+      },
+    });
+
+    // Oblicz procent ukończonych zadań
+    const completionRate = (completedTodos / totalTodos) * 100;
+    return Math.round(completionRate); // Zaokrąglamy do pełnych procentów
+  }
+
   async addTodo(data: CreateTodoDto, userid: number) {
     return this.prisma.todo.create({
       data: {
@@ -27,6 +64,7 @@ export class TodoService {
         content: data.content,
         done: data.done,
         userId: userid,
+        deadline: data.deadline,
       },
     });
   }
