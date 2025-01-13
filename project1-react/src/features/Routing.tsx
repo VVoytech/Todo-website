@@ -11,21 +11,16 @@ import {RegisterPage} from "./register/RegisterPage.tsx";
 
 const publicRoutes: RouteObject[] = [
     {
-        path: '/',
-        children: [
-            {
-                path: '/login',
-                element: <LoginPage/>
-            },
-            {
-                path: '/register',
-                element: <RegisterPage/>
-            },
-            {
-                path: '*',
-                element: <Navigate to="/login" replace/>
-            }
-        ]
+        path: '/login',
+        element: <LoginPage/>
+    },
+    {
+        path: '/register',
+        element: <RegisterPage/>
+    },
+    {
+        path: '*',
+        element: <Navigate to="/login" replace/>
     }
 ];
 

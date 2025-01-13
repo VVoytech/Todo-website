@@ -22,7 +22,7 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
     const navigate = useNavigate();
 
     const style: CSSProperties = {
-        border: "1px solid",
+        border: "2px solid",
         borderColor: isDone ? "rgba(194,0,0,0.72)" : "rgba(0,194,0,0.72)"
     };
 
@@ -33,7 +33,7 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
             const difference = deadline.getTime() - now.getTime();
 
             if (difference <= 0) {
-                setTimeLeft("Deadline minął");
+                setTimeLeft("Termin minął");
                 return;
             }
 
@@ -106,7 +106,7 @@ export const TodoListItem: FC<TodoListItemProps> = memo(({item, onTodoDeleted, o
             </Spoiler>
 
             <Text mt="xs" size="sm" c="dimmed">
-                <strong>Czas do deadline:</strong> {timeLeft}
+                <strong>Czas końca terminu:</strong> {timeLeft}
             </Text>
 
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px"}}>
