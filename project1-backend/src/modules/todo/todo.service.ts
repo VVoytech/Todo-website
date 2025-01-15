@@ -37,14 +37,12 @@ export class TodoService {
   }
 
   async getCompletionRate(userid: number): Promise<number> {
-    // Pobierz liczbę wszystkich zadań danego użytkownika
     const totalTodos = await this.prisma.todo.count({
       where: { userId: userid },
     });
 
-    if (totalTodos === 0) return 0; // Unikamy dzielenia przez 0
+    if (totalTodos === 0) return 0;
 
-    // Pobierz liczbę ukończonych zadań danego użytkownika
     const completedTodos = await this.prisma.todo.count({
       where: {
         userId: userid,
@@ -52,9 +50,8 @@ export class TodoService {
       },
     });
 
-    // Oblicz procent ukończonych zadań
     const completionRate = (completedTodos / totalTodos) * 100;
-    return Math.round(completionRate); // Zaokrąglamy do pełnych procentów
+    return Math.round(completionRate);
   }
 
   async addTodo(data: CreateTodoDto, userid: number) {

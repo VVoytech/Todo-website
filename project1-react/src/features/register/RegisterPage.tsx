@@ -55,7 +55,7 @@ export const RegisterPage: FC = () => {
                             required
                             type="email"
                             label="Email"
-                            placeholder="Your email"
+                            placeholder="Twój email"
                             {...form.getInputProps("email")}
                         />
                         <TextInput
@@ -69,7 +69,7 @@ export const RegisterPage: FC = () => {
                             required
                             type="password"
                             label="Potwierdź hasło"
-                            placeholder="Confirm your password"
+                            placeholder="Potwierdź hasło"
                             {...form.getInputProps("confirmPassword")}
                         />
                         <Button
@@ -89,7 +89,7 @@ export const RegisterPage: FC = () => {
                         onClick={() => navigate("/login")}
                         style={{ fontSize: 14 }}
                     >
-                        Already have an account? Log in
+                        Masz już konto? Zaloguj się
                     </Anchor>
                 </Group>
 

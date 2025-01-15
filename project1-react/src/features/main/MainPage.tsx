@@ -10,7 +10,6 @@ export const MainPage: FC = () => {
     const [completionRate, setCompletionRate] = useState<number | null>(null);
 
     useEffect(() => {
-        // Pobranie procentu ukończonych zadań
         getCompletionRate().then((rate) => setCompletionRate(rate));
     }, []);
 
