@@ -1,12 +1,10 @@
 FROM node:18-alpine AS build
 
 # Definiuj argumenty budowania dla zmiennych środowiskowych
-ARG VITE_API_URL
-ARG VITE_OTHER_VAR
+ARG REACT_APP_API_BASE_URL
 
 # Ustaw zmienne środowiskowe podczas procesu budowania
-ENV VITE_API_URL=$VITE_API_URL
-ENV VITE_OTHER_VAR=$VITE_OTHER_VAR
+ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
 
 WORKDIR /app
 COPY package*.json ./

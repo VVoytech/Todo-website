@@ -33,8 +33,7 @@ jobs:
             tags: |
               ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
             build-args: |
-              VITE_API_URL=${{ secrets.REACT_APP_API_BASE_URL }}
-              VITE_OTHER_VAR=${{ secrets.OTHER_SECRET }}
+              REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}
 
 
     deploy-to-azure:
