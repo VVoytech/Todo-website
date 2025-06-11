@@ -1,0 +1,34 @@
+name: Build
+on:
+    push:
+        branches: Todo-CICD
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        if: startsWith(github.event.head_commit.message, 'CICD')
+        steps:
+        - uses: actions/checkout@v3
+        - name: Login to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.docker_hub_username }}
+            password: ${{ secrets.docker_hub_token }}
+        - name: Build and push backend
+          uses: docker/build-push-action@v4
+          with:
+            context: ./project1-backend
+            file: ./project1-backend/Dockerfile
+            push: trueg
+            tags: |
+                wojciechkie/wk-registry:latest
+                wojciechkie/wk-registry:${{ github.sha }}
+        - name: Build and push frontend
+          uses: docker/build-push-action@v4
+          with:
+            context: ./project1-frontend
+            file: ./project1-frontend/Dockerfile
+            push: trueg
+            tags: |
+                wojciechkie/wk-registry:latest
+                wojciechkie/wk-registry:${{ github.sha }}
