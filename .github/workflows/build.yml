@@ -19,7 +19,7 @@ jobs:
           with:
             context: ./project1-backend
             file: ./project1-backend/Dockerfile
-            push: trueg
+            push: true
             tags: |
                 wojciechkie/wk-registry:latest
                 wojciechkie/wk-registry:${{ github.sha }}
@@ -28,7 +28,7 @@ jobs:
           with:
             context: ./project1-frontend
             file: ./project1-frontend/Dockerfile
-            push: trueg
+            push: true
             tags: |
                 wojciechkie/wk-registry:latest
                 wojciechkie/wk-registry:${{ github.sha }}
