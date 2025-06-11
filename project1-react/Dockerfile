@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "serve", "--", "--host"]
+CMD [ "npm", "run", "build", "--", "--host"]
