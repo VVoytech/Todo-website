@@ -43,7 +43,7 @@ jobs:
         - name: Create backend .env
           run: |
             echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' > backend.env
-            echo 'SECRET_KEY=${{ secrets.JWT_KEY }}' >> backend.env
+            echo 'JWT_KEY=${{ secrets.JWT_KEY }}' >> backend.env
 
         - name: Create frontend .env
           run: |
