@@ -94,7 +94,10 @@ export const TodoForm = () => {
                             dateFormat="YYYY-MM-DD"
                             timeFormat="HH:mm"
                             onChange={(value) => {
-                                form.setFieldValue("deadline", value.toString());
+                                // jeśli to instancja Date
+                                if (value instanceof Date && !isNaN(value.getTime())) {
+                                    form.setFieldValue("deadline", value);
+                                }
                             }}
                         />
                     </div>

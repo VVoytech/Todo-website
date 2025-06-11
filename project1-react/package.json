@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "serve": "vite --port 3000",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --port 3000 --host"
   },
   "dependencies": {
     "@mantine/core": "^7.15.2",
