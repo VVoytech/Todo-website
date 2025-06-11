@@ -4,7 +4,6 @@ on:
         branches: Todo-CICD
 
 
-        # # This workflow is triggered on pushes to the Todo-CICD branch.
 jobs:
     deploy-to-dockerhub:
         runs-on: ubuntu-latest
