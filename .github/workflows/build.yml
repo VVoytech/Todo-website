@@ -4,7 +4,7 @@ on:
         branches: Todo-CICD
 
 jobs:
-    deploy:
+    deploy-to-dockerhub:
         runs-on: ubuntu-latest
         if: startsWith(github.event.head_commit.message, 'CICD')
         steps:
