@@ -22,12 +22,12 @@ jobs:
             file: ./project1-backend/Dockerfile
             push: true
             tags: |
-                ${{ secrets.DOCKER_HUB_USERNAME }}/lab8private/todo-backend:latest
-        - name: Build and push frontend
-          uses: docker/build-push-action@v4
-          with:
-            context: ./project1-frontend
-            file: ./project1-frontend/Dockerfile
-            push: true
-            tags: |
-                ${{ secrets.DOCKER_HUB_USERNAME }}/lab8private/todo-frontend:latest
+                ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:latest
+        # - name: Build and push frontend
+        #   uses: docker/build-push-action@v4
+        #   with:
+        #     context: ./project1-frontend
+        #     file: ./project1-frontend/Dockerfile
+        #     push: true
+        #     tags: |
+        #         ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:latest
