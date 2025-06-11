@@ -24,4 +24,4 @@ RUN npx prisma generate
 EXPOSE 9000
 
 # Command to run the app
-CMD [  "npm", "run", "start:dev" ]
+CMD [  "npm", "run", "start:prod" ]
