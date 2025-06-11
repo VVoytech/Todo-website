@@ -3,7 +3,6 @@ on:
     push:
         branches: Todo-CICD
 
-# This workflow builds and deploys the project to Docker Hub and Azure VM
 
 jobs:
     deploy-to-dockerhub:
