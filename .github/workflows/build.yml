@@ -26,8 +26,8 @@ jobs:
         - name: Build and push frontend
           uses: docker/build-push-action@v4
           with:
-            context: ./project1-frontend
-            file: ./project1-frontend/Dockerfile
+            context: ./project1-react
+            file: ./project1-react/Dockerfile
             push: true
             tags: |
                 ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
