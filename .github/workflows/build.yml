@@ -70,5 +70,13 @@ jobs:
               docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
               docker stop backend || true && docker rm backend || true
               docker stop frontend || true && docker rm frontend || true
-              docker run -d --env-file ~/backend.env --name backend -p 9000:9000 ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
-              docker run -d --env-file ~/frontend.env --name frontend -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
+              docker run -d \
+                -v ~/backend.env:/app/.env \
+                --name backend \
+                -p 9000:9000 \
+                ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
+              docker run -d \
+                -v ~/frontend.env:/app/.env \
+                --name frontend \
+                -p 3000:3000 \
+                ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
