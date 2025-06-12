@@ -12,40 +12,38 @@ jobs:
         steps:
         - name: Checkout code
           uses: actions/checkout@v3
+
+        - name: Create backend .env file
+          run: |
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./project1-backend/.env
+            echo "JWT_KEY=${{ secrets.JWT_KEY }}" >> ./project1-backend/.env
+            echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}" >> ./project1-backend/.env
+
+        - name: Create frontend .env file
+          run: |
+            echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" > ./project1-react/.env
+
         - name: Login to Docker Hub
           uses: docker/login-action@v2
           with:
             username: ${{ secrets.DOCKER_HUB_USERNAME }}
             password: ${{ secrets.DOCKER_HUB_TOKEN }}
-        - name: Build and push backend
+
+        - name: Build and push backend image
           uses: docker/build-push-action@v4
           with:
             context: ./project1-backend
             file: ./project1-backend/Dockerfile
             push: true
-            tags: |
-                ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
+            tags: ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
 
-        - name: Create backend .env
-          run: |
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./project1-backend/backend.env
-            echo "JWT_KEY=${{ secrets.JWT_KEY }}" >> ./project1-backend/backend.env
-            echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}" >> ./project1-backend/backend.env
-
-        - name: Create frontend .env
-          run: |
-            echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" > ./project1-react/frontend.env
-
-
-        - name: Build and push frontend
+        - name: Build and push frontend image
           uses: docker/build-push-action@v4
           with:
             context: ./project1-react
             file: ./project1-react/Dockerfile
             push: true
-            tags: |
-              ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
-
+            tags: ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
 
     deploy-to-azure:
       runs-on: ubuntu-latest
@@ -55,19 +53,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Copy .env files to VM
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.AZURE_VM_IP }}
-          username: azureuser
-          key: ${{ secrets.AZURE_VM_SSH_KEY }}
-          source: |
-            ./project1-backend/backend.env
-            ./project1-react/frontend.env
-          target: "~/"
-
-
-      - name: Deploy containers on VM
+      - name: Deploy containers on Azure VM
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.AZURE_VM_IP }}
@@ -79,13 +65,10 @@ jobs:
             docker stop backend || true && docker rm backend || true
             docker stop frontend || true && docker rm frontend || true
             docker run -d \
-              -v ~/backend.env:/app/.env \
               --name backend \
               -p 9000:9000 \
               ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
-
             docker run -d \
-              -v ~/frontend.env:/usr/share/nginx/html/.env \
               --name frontend \
               -p 3000:80 \
               ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
