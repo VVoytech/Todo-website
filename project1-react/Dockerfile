@@ -1,4 +1,3 @@
-# Etap 1: Budowanie frontendu
 FROM node:18-alpine AS build
 
 WORKDIR /app
@@ -10,7 +9,6 @@ COPY . .
 
 RUN npm run build
 
-# Etap 2: Serwowanie przez Nginx
 FROM nginx:alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html

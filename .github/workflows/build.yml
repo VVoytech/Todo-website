@@ -26,6 +26,12 @@ jobs:
             tags: |
                 ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
 
+        - name: Create backend .env
+          run: |
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./project1-backend/backend.env
+            echo "JWT_KEY=${{ secrets.JWT_KEY }}" >> ./project1-backend/backend.env
+            echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}" >> ./project1-backend/backend.env
+
         - name: Create frontend .env
           run: |
             echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" > ./project1-react/.env
@@ -41,44 +47,42 @@ jobs:
 
 
     deploy-to-azure:
-        runs-on: ubuntu-latest
-        needs: deploy-to-dockerhub
-        if: startsWith(github.event.head_commit.message, 'CICD')
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-        - name: Create backend .env
-          run: |
-            echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' > backend.env
-            echo 'JWT_KEY=${{ secrets.JWT_KEY }}' >> backend.env
+      runs-on: ubuntu-latest
+      needs: deploy-to-dockerhub
+      if: startsWith(github.event.head_commit.message, 'CICD')
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        - name: Copy .env files to VM
-          uses: appleboy/scp-action@v0.1.7
-          with:
-            host: ${{ secrets.AZURE_VM_IP }}
-            username: azureuser
-            key: ${{ secrets.AZURE_VM_SSH_KEY }}
-            source: "backend.env,frontend.env"
-            target: "~/"
+      - name: Copy .env files to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: azureuser
+          key: ${{ secrets.AZURE_VM_SSH_KEY }}
+          source: |
+            ./project1-backend/backend.env
+            ./project1-react/frontend.env
+          target: "~/"
 
-        - name: Deploy containers on VM
-          uses: appleboy/ssh-action@v0.1.10
-          with:
-            host: ${{ secrets.AZURE_VM_IP }}
-            username: azureuser
-            key: ${{ secrets.AZURE_VM_SSH_KEY }}
-            script: |
-              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
-              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
-              docker stop backend || true && docker rm backend || true
-              docker stop frontend || true && docker rm frontend || true
-              docker run -d \
-                -v ~/backend.env:/app/.env \
-                --name backend \
-                -p 9000:9000 \
-                ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
-              docker run -d \
-                --name frontend \
-                -p 3000:80 \
-                ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
-
+      - name: Deploy containers on VM
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: azureuser
+          key: ${{ secrets.AZURE_VM_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
+            docker stop backend || true && docker rm backend || true
+            docker stop frontend || true && docker rm frontend || true
+            docker run -d \
+              -v ~/backend.env:/app/.env \
+              --name backend \
+              -p 9000:9000 \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
+            docker run -d \
+              -v ~/frontend.env:/usr/share/nginx/html/.env \
+              --name frontend \
+              -p 3000:80 \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-frontend
