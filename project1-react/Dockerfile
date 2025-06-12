@@ -1,5 +1,5 @@
-# Etap build – budowanie React
-FROM node:18-alpine
+# Etap 1: Budowanie frontendu
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
@@ -8,14 +8,13 @@ RUN npm install
 
 COPY . .
 
-# budujemy produkcyjną wersję React – używa zmiennych z .env
+# Tutaj .env jest wykorzystywany przez np. react-scripts
 RUN npm run build
 
-
-# Etap produkcyjny – Nginx serwujący statyczne pliki
+# Etap 2: Serwowanie przez Nginx
 FROM nginx:alpine
 
-# Skopiuj zbudowany frontend
+# Skopiuj zbudowaną aplikację z poprzedniego etapu
 COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
