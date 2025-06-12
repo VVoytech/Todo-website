@@ -34,7 +34,8 @@ jobs:
 
         - name: Create frontend .env
           run: |
-            echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" > ./project1-react/.env
+            echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" > ./project1-react/frontend.env
+
 
         - name: Build and push frontend
           uses: docker/build-push-action@v4
@@ -54,16 +55,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # - name: Copy .env files to VM
-      #   uses: appleboy/scp-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.AZURE_VM_IP }}
-      #     username: azureuser
-      #     key: ${{ secrets.AZURE_VM_SSH_KEY }}
-      #     source: |
-      #       ./project1-backend/backend.env
-      #       ./project1-react/frontend.env
-      #     target: "~/"
+      - name: Copy .env files to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: azureuser
+          key: ${{ secrets.AZURE_VM_SSH_KEY }}
+          source: |
+            ./project1-backend/backend.env
+            ./project1-react/frontend.env
+          target: "~/"
+
 
       - name: Deploy containers on VM
         uses: appleboy/ssh-action@v0.1.10
@@ -81,6 +83,7 @@ jobs:
               --name backend \
               -p 9000:9000 \
               ${{ secrets.DOCKER_HUB_USERNAME }}/wk-registry:todo-backend
+
             docker run -d \
               -v ~/frontend.env:/usr/share/nginx/html/.env \
               --name frontend \
